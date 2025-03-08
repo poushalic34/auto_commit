@@ -2,7 +2,7 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: '0 18 * * *'  # Runs every day at midnight UTC
+    - cron: '0 18 * * *'  # Runs every day at 11:30 PM IST (6 PM UTC)
 
 jobs:
   commit:
@@ -12,12 +12,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Make changes
-        run: echo "Auto commit on $(date)" >> daily_update.txt
+        run: echo "Auto commit on $(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt
 
       - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git commit -m "Automated commit on $(date)"
-          git push
+          git commit -m "Automated commit on $(date)" || exit 0
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/poushalic34/auto_commit.git HEAD:main
