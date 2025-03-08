@@ -1,15 +1,5 @@
 name: Auto Commit
 
-jobs:
-  commit:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Make changes
-        run: echo "Auto commit on $(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt
-
 on:
   schedule:
     - cron: '15 18 * * *' # Runs at 11:45 PM IST (6:15 PM UTC)
