@@ -1,9 +1,12 @@
 name: Auto Commit
 
 on:
+  push:  # ✅ Runs when code is pushed to the repository
+    branches:
+      - main
   schedule:
-    - cron: '15 18 * * *' # Runs at 11:45 PM IST (6:15 PM UTC)
-  workflow_dispatch:  # Allows manual trigger
+    - cron: '15 18 * * *' # ✅ Runs at 11:45 PM IST (6:15 PM UTC)
+  workflow_dispatch:  # ✅ Allows manual trigger
 
 jobs:
   commit:
