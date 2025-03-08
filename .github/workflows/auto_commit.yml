@@ -35,8 +35,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add .
           git commit -m "Automated commit on $(date)" || exit 0
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/poushalic34/auto_commit.git HEAD:main
-$(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt
+          git push https://x-access-token:${{ secrets.AUTOMATION_TOKEN }}@github.com/poushalic34/auto_commit.git HEAD:main
 
       - name: Commit and push changes
         env:
