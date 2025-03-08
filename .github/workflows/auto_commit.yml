@@ -1,9 +1,5 @@
 name: Auto Commit
 
-on:
-  schedule:
-    - cron: '0 18 * * *'  # Runs every day at 11:30 PM IST (6 PM UTC)
-
 jobs:
   commit:
     runs-on: ubuntu-latest
