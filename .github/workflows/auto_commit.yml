@@ -8,7 +8,35 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Make changes
+        run: echo "Auto commit on name: Auto Commit
+
+on:
+  schedule:
+    - cron: '15 18 * * *' # Runs at 11:45 PM IST (6:15 PM UTC)
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Make changes
         run: echo "Auto commit on $(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Automated commit on $(date)" || exit 0
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/poushalic34/auto_commit.git HEAD:main
+$(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt
 
       - name: Commit and push changes
         env:
