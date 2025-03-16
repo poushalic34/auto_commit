@@ -2,9 +2,9 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: '0 17 * * *' # ✅ Runs at 10:30 PM IST (5:00 PM UTC)
+    - cron: '30 18 * * *' # ✅ Runs at 12:00 AM IST (6:30 PM UTC)
   workflow_dispatch:  # ✅ Allows manual trigger
-  
+
 jobs:
   commit:
     runs-on: ubuntu-latest
@@ -17,12 +17,15 @@ jobs:
       - name: Make changes
         run: echo "Auto commit on $(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt
 
+      - name: Configure Git with your credentials
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ secrets.MY_EMAIL }}"
+
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOMATION_TOKEN }}
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
           git add .
           git commit -m "Automated commit on $(date)" || exit 0
-          git push https://x-access-token:${{ secrets.AUTOMATION_TOKEN }}@github.com/poushalic34/auto_commit.git HEAD:main
+          git push "https://x-access-token:${{ secrets.AUTOMATION_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
