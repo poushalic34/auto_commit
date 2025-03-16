@@ -2,7 +2,7 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: '5 19 * * *' # ✅ Runs at 12:35 AM IST (7:05 PM UTC)
+    - cron: '45 19 * * *' # ✅ Runs at 1:15 AM IST (7:45 PM UTC)
   workflow_dispatch:  # ✅ Allows manual trigger
 
 jobs:
@@ -14,8 +14,14 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set IST Timezone
+        run: sudo ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+
       - name: Make changes (Ensure Change Exists)
-        run: echo "Auto commit on $(date +'%Y-%m-%d %H:%M:%S')" >> daily_update.txt && cat daily_update.txt
+        run: |
+          echo "Auto commit on $(date +'%Y-%m-%d %H:%M:%S IST')" >> daily_update.txt
+          echo "---" >> daily_update.txt # Ensures Git detects a change
+          cat daily_update.txt
 
       - name: Debug Git Status
         run: |
@@ -32,5 +38,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.AUTOMATION_TOKEN }}
         run: |
           git add .
-          git commit -m "Automated commit on $(date)" || exit 0
-          git push "https://x-access-token:${{ secrets.AUTOMATION_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
+          git commit --author="${{ github.actor }} <${{ secrets.MY_EMAIL }}>" -m "Automated commit on $(date +'%Y-%m-%d %H:%M:%S IST')" || echo "No changes to commit"
+          git push "https://x-access-token:${{ secrets.AUTOMATION_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main || echo "Push failed"
